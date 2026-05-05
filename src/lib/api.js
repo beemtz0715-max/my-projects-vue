@@ -23,7 +23,8 @@ async function rawFetch(path, { method = 'GET', body, token } = {}) {
   if (body !== undefined) headers['Content-Type'] = 'application/json'
   if (token) headers['Authorization'] = `Bearer ${token}`
 
-  const response = await fetch(`${BASE_URL}/api${path}`, {
+  // ⭐ FIXED: removed the broken "/api" prefix
+  const response = await fetch(`${BASE_URL}${path}`, {
     method,
     headers,
     body: body !== undefined ? JSON.stringify(body) : undefined,

@@ -3,6 +3,8 @@ import { computed, ref } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { rawFetch, ApiError } from '@/lib/api'
 
+const API_BASE = "https://my-projects-rest-api.expense-splitter-vuebeemtz715workersdev.workers.dev/api/auth"
+
 function decodeJwtEmail(token) {
   try {
     const payload = JSON.parse(atob(token.split('.')[1]))
@@ -35,7 +37,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function register({ email: userEmail, password }) {
-    await rawFetch('/auth/register', {
+    await rawFetch(`${API_BASE}/register`, {
       method: 'POST',
       body: { email: userEmail, password },
     })
@@ -43,7 +45,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function login({ email: userEmail, password }) {
-    const data = await rawFetch('/auth/login', {
+    const data = await rawFetch(`${API_BASE}/login`, {
       method: 'POST',
       body: { email: userEmail, password },
     })
@@ -57,7 +59,7 @@ export const useAuthStore = defineStore('auth', () => {
   async function refresh() {
     if (!refreshToken.value) return false
     try {
-      const data = await rawFetch('/auth/refresh', {
+      const data = await rawFetch(`${API_BASE}/refresh`, {
         method: 'POST',
         body: { refresh_token: refreshToken.value },
       })
@@ -74,7 +76,7 @@ export const useAuthStore = defineStore('auth', () => {
     clear()
     if (token) {
       try {
-        await rawFetch('/auth/logout', {
+        await rawFetch(`${API_BASE}/logout`, {
           method: 'POST',
           body: { refresh_token: token },
         })
